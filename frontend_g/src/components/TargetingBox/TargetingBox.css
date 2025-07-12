@@ -1,0 +1,11 @@
+.targeting-box {
+    position: absolute;
+    border: 3px solid #f1c40f;
+    /* Yellow for a neutral guess state */
+    background-color: rgba(241, 196, 15, 0.2);
+    border-radius: 4px;
+    box-sizing: border-box;
+    pointer-events: none;
+    /* Allows clicks to pass through if needed */
+    z-index: 20;
+}
