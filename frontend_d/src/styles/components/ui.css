@@ -1,0 +1,112 @@
+/* Buttons */
+.button {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-weight: bold;
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.button.primary {
+    background-color: var(--primary);
+    color: white;
+}
+
+.button.primary:hover:not(:disabled) {
+    background-color: var(--primary-hover);
+}
+
+.button.secondary {
+    background-color: var(--secondary);
+    color: var(--text-dark);
+}
+
+.button.secondary:hover:not(:disabled) {
+    background-color: var(--secondary-hover);
+}
+
+.button.large {
+    padding: 0.75rem 1.5rem;
+    font-size: 1.1rem;
+}
+
+.button.small {
+    padding: 0.3rem 0.8rem;
+    font-size: 0.9rem;
+}
+
+.button.full-width {
+    width: 100%;
+}
+
+.button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Messages */
+.message {
+    padding: 1rem;
+    margin: 1rem 0;
+    border-radius: var(--border-radius);
+    text-align: center;
+    font-weight: 500;
+}
+
+.message.success {
+    background: #f6ffed;
+    border: 1px solid var(--success);
+    color: var(--success);
+}
+
+.message.error {
+    background: #fff2f0;
+    border: 1px solid var(--danger);
+    color: var(--danger);
+}
+
+.message.warning {
+    background: #fffbe6;
+    border: 1px solid var(--warning);
+    color: var(--warning);
+}
+
+/* Header */
+.header {
+    background: white;
+    padding: 1rem 2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo h1 {
+    font-size: 1.8rem;
+    color: var(--primary);
+}
+
+/* Add this to the existing ui.css */
+.game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding: 0 1rem;
+    gap: 1rem;
+}
+
+/* Add to the existing ui.css */
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.button.secondary a {
+    display: block;
+    padding: 0.5rem 1rem;
+}
