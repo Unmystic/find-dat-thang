@@ -1,0 +1,139 @@
+/* ===== LAYOUT ===== */
+.layout {
+  height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  background: #0d1117;
+  color: #f0f6fc;
+}
+
+/* ===== HUD ===== */
+.hud {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: #161b22;
+  gap: 1rem;
+}
+
+.hud-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 90px;
+}
+
+.hud-block .label {
+  font-size: 0.8rem;
+  color: #8b949e;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.hud-block .value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #58a6ff;
+}
+
+.hud-message {
+  flex: 1;
+  text-align: center;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.hud-message.final {
+  color: #3fb950;
+  animation: pulse 1s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+/* ===== CENTERED CARD ===== */
+.center-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 2rem;
+}
+
+.card {
+  position: relative;
+  max-width: 80vmin;
+  max-height: 65vmin;
+  border: 2px solid #30363d;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  cursor: crosshair;
+}
+
+.card img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* ===== GUESS BOX ===== */
+.guess-box {
+  position: absolute;
+  width: 8%;
+  height: 8%;
+  border: 3px solid #58a6ff;
+  border-radius: 4px;
+  pointer-events: none;
+}
+
+.guess-box.wrong {
+  border-color: #ff7b72;
+  animation: shake 0.3s;
+}
+
+.guess-box.correct {
+  border-color: #3fb950;
+}
+
+@keyframes shake {
+  25% {
+    transform: translateX(-4px);
+  }
+
+  75% {
+    transform: translateX(4px);
+  }
+}
+
+/* ===== GUESS BUTTON ===== */
+.guess-btn {
+  padding: 0.9rem 3rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #58a6ff, #1f6feb);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+}
+
+.guess-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(31, 111, 235, 0.6);
+}
+
+.guess-btn:disabled {
+  background: #21262d;
+  color: #8b949e;
+  cursor: not-allowed;
+}

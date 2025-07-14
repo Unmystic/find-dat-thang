@@ -6,8 +6,7 @@ const ImageViewer = ({ imageUrl, scale, position, onLoad }) => {
     useEffect(() => {
         const img = imgRef.current;
         if (img && img.complete) {
-            // If image is already loaded (cached), trigger onLoad immediately
-            onLoad();
+            onLoad(img);
         }
     }, [imageUrl, onLoad]);
 
@@ -21,7 +20,7 @@ const ImageViewer = ({ imageUrl, scale, position, onLoad }) => {
                 transform: `translate(${position.x}px, ${position.y}px) scale(${scale})`,
                 transformOrigin: "top left",
             }}
-            onLoad={onLoad}
+            onLoad={(e) => onLoad(e.target)}
         />
     );
 };

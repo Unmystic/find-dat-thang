@@ -50,15 +50,36 @@ const Game = () => {
     const handleGuess = (box) => {
         if (!isPlaying) return;
 
-        // For now, simulate correctness: let's say the hidden object is at (300,300) with size 100x100
-        const target = { x: 300, y: 300, width: 100, height: 100 };
-        const isHit =
-            box.x < target.x + target.width &&
-            box.x + box.width > target.x &&
-            box.y < target.y + target.height &&
-            box.y + box.height > target.y;
+        // For now, simulate: hidden object at (300,300) with size 100x100
+        const target = {
+            x: 300,
+            y: 300,
+            width: 100,
+            height: 100,
+            center: { x: 350, y: 350 }, // Center of target
+        };
 
-        makeGuess(isHit);
+        // Check if target center is within the box
+        const isHit =
+            target.center.x >= box.x &&
+            target.center.x <= box.x + box.width &&
+            target.center.y >= box.y &&
+            target.center.y <= box.y + box.height;
+
+        // Check proximity to center (within 25% of box size)
+        const boxCenterX = box.x + box.width / 2;
+        const boxCenterY = box.y + box.height / 2;
+        const distance = Math.sqrt(
+            Math.pow(target.center.x - boxCenterX, 2) +
+            Math.pow(target.center.y - boxCenterY, 2),
+        );
+
+        // Require target to be near center of box
+        const maxDistance = Math.min(box.width, box.height) * 0.25;
+        const isCenterHit = distance <= maxDistance;
+
+        // For now, require center hit
+        makeGuess(isCenterHit);
     };
 
     const totalTime = time + internalTime;
