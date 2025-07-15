@@ -59,27 +59,34 @@ const Game = () => {
             center: { x: 350, y: 350 }, // Center of target
         };
 
+        // Calculate box center
+        const boxCenterX = box.x + box.width / 2;
+        const boxCenterY = box.y + box.height / 2;
+
         // Check if target center is within the box
-        const isHit =
+        const isInBox =
             target.center.x >= box.x &&
             target.center.x <= box.x + box.width &&
             target.center.y >= box.y &&
             target.center.y <= box.y + box.height;
 
-        // Check proximity to center (within 25% of box size)
-        const boxCenterX = box.x + box.width / 2;
-        const boxCenterY = box.y + box.height / 2;
+        // Require target to be near center of box
+        const maxDistance = Math.min(box.width, box.height) * 0.25;
         const distance = Math.sqrt(
             Math.pow(target.center.x - boxCenterX, 2) +
             Math.pow(target.center.y - boxCenterY, 2),
         );
-
-        // Require target to be near center of box
-        const maxDistance = Math.min(box.width, box.height) * 0.25;
         const isCenterHit = distance <= maxDistance;
 
         // For now, require center hit
-        makeGuess(isCenterHit);
+        makeGuess(isCenterHit && isInBox);
+
+        console.log(`Guess result: ${isCenterHit && isInBox ? "HIT" : "MISS"}`, {
+            boxCenter: { x: boxCenterX, y: boxCenterY },
+            targetCenter: target.center,
+            distance,
+            maxDistance,
+        });
     };
 
     const totalTime = time + internalTime;

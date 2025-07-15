@@ -1,28 +1,19 @@
-import React, { useEffect, useRef } from "react";
+import React, { forwardRef } from "react";
 
-const ImageViewer = ({ imageUrl, scale, position, onLoad }) => {
-    const imgRef = useRef(null);
-
-    useEffect(() => {
-        const img = imgRef.current;
-        if (img && img.complete) {
-            onLoad(img);
-        }
-    }, [imageUrl, onLoad]);
-
+const ImageViewer = forwardRef(({ imageUrl, scale, position, onLoad }, ref) => {
     return (
         <img
-            ref={imgRef}
+            ref={ref}
             src={imageUrl}
             alt="Find the hidden object"
             className="game-image"
             style={{
                 transform: `translate(${position.x}px, ${position.y}px) scale(${scale})`,
-                transformOrigin: "top left",
+                transformOrigin: "center",
             }}
             onLoad={(e) => onLoad(e.target)}
         />
     );
-};
+});
 
 export default ImageViewer;
