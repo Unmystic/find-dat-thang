@@ -78,6 +78,7 @@
     align-items: center;
     justify-content: center;
     overflow: hidden;
+    min-height: 0;
     /* Crucial for react-zoom-pan-pinch */
 }
 
