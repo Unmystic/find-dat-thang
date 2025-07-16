@@ -1,0 +1,86 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+//generator client {
+  //provider = "prisma-client-js"
+  //output   = "../generated/prisma"
+//}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Model for a game instance (i.e., an image puzzle)
+model Game {
+  id       String  @id @default(cuid())
+  title    String
+  imageUrl String
+  target   Target? // One-to-one relationship with a Target
+  scores   Score[]
+}
+
+// Model for the hidden target in a game
+model Target {
+  id      String @id @default(cuid())
+  name    String // e.g., "Polar Bear"
+  x       Float // The x-coordinate of the target's center (%)
+  y       Float // The y-coordinate of the target's center (%)
+  radius  Float // The acceptable radius for a correct guess (%)
+  
+  game    Game   @relation(fields: [gameId], references: [id])
+  gameId  String @unique // Each target belongs to exactly one game
+}
+
+// Model for leaderboard scores
+model Score {
+  id            String   @id @default(cuid())
+  playerName    String
+  timeInSeconds Int
+  createdAt     DateTime @default(now())
+  
+  game          Game     @relation(fields: [gameId], references: [id])
+  gameId        String
+  
+  // Optional link to a registered user in the future
+  user          User?    @relation(fields: [userId], references: [id])
+  userId        String?
+}
+
+
+// --- Models for Future Authentication ---
+
+// User model for Passport.js authentication
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String?
+  role      Role     @default(USER)
+  scores    Score[]
+  sessions  Session[]
+}
+
+// Role enum for user authorization
+enum Role {
+  USER
+  EDITOR
+  ADMIN
+}
+
+// Session model for prisma-session-store
+model Session {
+  id        String   @id
+  sid       String   @unique
+  data      String
+  expiresAt DateTime
+  user      User?    @relation(fields: [userId], references: [id])
+  userId    String?
+}
