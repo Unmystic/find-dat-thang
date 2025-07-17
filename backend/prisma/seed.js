@@ -1,70 +1,54 @@
 const { PrismaClient } = require("@prisma/client");
+const bcrypt = require("bcryptjs");
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log("Start seeding ...");
+    console.log("Start seeding ...");
 
-  // Create the first game: Snowman Party
-  const game1 = await prisma.game.create({
-    data: {
-      title: "Snowman Party",
-      // In a real app, you'd upload this to a CDN/storage and use that URL.
-      // For now, we assume the frontend serves it from its public folder.
-      imageUrl: "/images/1_polar-bear2.jpeg",
-      target: {
-        create: {
-          name: "Polar Bear",
-          x: 25.5,
-          y: 35.5,
-          radius: 7.5, // The user must click within this % radius of the center
+    // Clear existing data to prevent conflicts
+    await prisma.score.deleteMany();
+    await prisma.target.deleteMany();
+    await prisma.game.deleteMany();
+    await prisma.user.deleteMany();
+
+    // Create an ADMIN user
+    const hashedPassword = await bcrypt.hash("password123", 10);
+    const adminUser = await prisma.user.create({
+        data: {
+            email: "admin@example.com",
+            password: hashedPassword,
+            name: "Admin User",
+            role: "ADMIN",
         },
-      },
-      scores: {
-        create: [
-          { playerName: "Dudolf", timeInSeconds: 12 },
-          { playerName: "Frosty", timeInSeconds: 25 },
-          { playerName: "Olaf", timeInSeconds: 48 },
-        ],
-      },
-    },
-  });
+    });
+    console.log(`Created admin user with email: ${adminUser.email}`);
 
-  console.log(`Created game with id: ${game1.id}`);
-
-  // You can add more games here for testing
-  const game2 = await prisma.game.create({
-    data: {
-      title: "Ghost Story",
-      // In a real app, you'd upload this to a CDN/storage and use that URL.
-      // For now, we assume the frontend serves it from its public folder.
-      imageUrl: "/images/1_ghost.jpeg",
-      target: {
-        create: {
-          name: "Ghost",
-          x: 55.5,
-          y: 75.5,
-          radius: 7.5, // The user must click within this % radius of the center
+    // Create the first game
+    const game1 = await prisma.game.create({
+        data: {
+            title: "Snowman Party",
+            imageUrl: "/images/1_polar-bear2.jpeg",
+            target: {
+                create: { name: "Polar Bear", x: 25.5, y: 35.5, radius: 7.5 },
+            },
+            scores: {
+                create: [
+                    { playerName: "Dudolf", timeInSeconds: 12 },
+                    { playerName: "Frosty", timeInSeconds: 25 },
+                ],
+            },
         },
-      },
-      scores: {
-        create: [
-          { playerName: "Dudolf", timeInSeconds: 12 },
-          { playerName: "Frosty", timeInSeconds: 25 },
-          { playerName: "Olaf", timeInSeconds: 48 },
-        ],
-      },
-    },
-  });
-  console.log(`Created game with id: ${game2.id}`);
+    });
+    console.log(`Created game with id: ${game1.id}`);
 
-  console.log("Seeding finished.");
+    console.log("Seeding finished.");
 }
 
 main()
-  .catch((e) => {
-    console.error(e);
-    process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+    .catch((e) => {
+        console.error(e);
+        process.exit(1);
+    })
+    .finally(async () => {
+        await prisma.$disconnect();
+    });

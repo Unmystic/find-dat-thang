@@ -1,71 +1,74 @@
-import { useState, useEffect } from "react";
-import "./App.css";
-import WelcomeScreen from "./components/WelcomeScreen/WelcomeScreen";
+import { useState, useContext } from "react";
+import { AuthContext } from "./context/AuthContext";
+import WelcomeScreen from "./components/WelcomeScreen/WelcomeScreen"; // Assuming you move WelcomeScreen to pages
 import GameScreen from "./components/GameScreen/GameScreen";
 import EndGameScreen from "./components/EndGameScreen/EndGameScreen";
+import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
+import CreateGamePage from "./pages/CreateGamePage";
+import "./App.css";
 
 function App() {
-  const [gameState, setGameState] = useState("welcome"); // 'welcome', 'playing', 'finished'
-  const [allGames, setAllGames] = useState([]);
-  const [selectedGame, setSelectedGame] = useState(null);
-  const [gameResult, setGameResult] = useState(null);
-  // Fetch all games from the backend on initial load
-  useEffect(() => {
-    const fetchGames = async () => {
-      try {
-        const response = await fetch("/api/games");
-        if (!response.ok) throw new Error("Network response was not ok");
-        const games = await response.json();
-        setAllGames(games);
-      } catch (error) {
-        console.error("Failed to fetch games:", error);
-        // Handle error state in a real app, e.g., show an error message
-      }
+    const [page, setPage] = useState("welcome");
+    const [activeGame, setActiveGame] = useState(null);
+    const [gameResult, setGameResult] = useState(null);
+    const { user } = useContext(AuthContext);
+
+    const handleNavigate = (targetPage) => setPage(targetPage);
+
+    const handleStartGame = (game) => {
+        setActiveGame(game);
+        setPage("playing");
     };
-    fetchGames();
-  }, []);
 
-  const handleStartGame = () => {
-    if (allGames.length > 0) {
-      // Randomly select a game from the fetched list
-      const randomIndex = Math.floor(Math.random() * allGames.length);
-      setSelectedGame(allGames[randomIndex]);
-      setGameState("playing");
-    }
-  };
+    const handleGameFinish = (result) => {
+        setGameResult(result);
+        setPage("finished");
+    };
 
-  const handleGameFinish = (result) => {
-    setGameResult(result);
-    setGameState("finished");
-  };
+    const renderPage = () => {
+        // Protected Routes Logic
+        if (
+            page === "create-game" &&
+            (!user || !["ADMIN", "EDITOR"].includes(user.role))
+        ) {
+            return (
+                <WelcomeScreen
+                    onNavigate={handleNavigate}
+                    onStartGame={handleStartGame}
+                />
+            );
+        }
 
-  const handlePlayAgain = () => {
-    setSelectedGame(null);
-    setGameResult(null);
-    setGameState("welcome");
-  };
+        switch (page) {
+            case "login":
+                return <LoginPage onNavigate={handleNavigate} />;
+            case "register":
+                return <RegisterPage onNavigate={handleNavigate} />;
+            case "playing":
+                return <GameScreen game={activeGame} onGameFinish={handleGameFinish} />;
+            case "finished":
+                return (
+                    <EndGameScreen
+                        game={activeGame}
+                        result={gameResult}
+                        onPlayAgain={() => setPage("welcome")}
+                    />
+                );
+            case "create-game":
+                return <CreateGamePage onNavigate={handleNavigate} />;
+            case "welcome":
+            default:
+                return (
+                    <WelcomeScreen
+                        onNavigate={handleNavigate}
+                        onStartGame={handleStartGame}
+                    />
+                );
+        }
+    };
 
-  const renderContent = () => {
-    switch (gameState) {
-      case "playing":
-        return (
-          <GameScreen game={selectedGame} onGameFinish={handleGameFinish} />
-        );
-      case "finished":
-        return (
-          <EndGameScreen
-            game={selectedGame}
-            result={gameResult}
-            onPlayAgain={handlePlayAgain}
-          />
-        );
-      case "welcome":
-      default:
-        return <WelcomeScreen onStartGame={handleStartGame} />;
-    }
-  };
-
-  return <div className="App">{renderContent()}</div>;
+    return <div className="App">{renderPage()}</div>;
 }
 
 export default App;

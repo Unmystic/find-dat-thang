@@ -2,27 +2,41 @@
 
 const express = require("express");
 const router = express.Router();
+const passport = require("passport");
 const {
-  getAllGames,
-  getGameById,
-  getGameScores,
-  submitGuess,
-  addScore,
+    upload,
+    createGame,
+    ...gameController
 } = require("../controllers/gameController");
 
-// GET /api/games - Get a list of all games
-router.get("/", getAllGames);
+// Middleware to check for specific roles
+const checkRole = (roles) => (req, res, next) => {
+    if (roles.includes(req.user.role)) {
+        return next();
+    }
+    return res.status(403).json({ error: "Forbidden: Insufficient role" });
+};
 
-// GET /api/games/:id - Get details for a single game
-router.get("/:id", getGameById);
+// Public Routes
+router.get("/", gameController.getAllGames);
+router.get("/:id", gameController.getGameById);
+router.get("/:id/scores", gameController.getGameScores);
+router.post("/:id/guess", gameController.submitGuess);
 
-// GET /api/games/:id/scores - Get the leaderboard for a game
-router.get("/:id/scores", getGameScores);
+// Protected Routes
+router.post(
+    "/:id/scores",
+    passport.authenticate("jwt", { session: false }),
+    gameController.addScore,
+);
 
-// POST /api/games/:id/guess - Submit a guess for a game
-router.post("/:id/guess", submitGuess);
-
-// POST /api/games/:id/scores - Add a new score to the leaderboard
-router.post("/:id/scores", addScore);
+// Admin/Editor Route for creating games
+router.post(
+    "/",
+    passport.authenticate("jwt", { session: false }),
+    checkRole(["ADMIN", "EDITOR"]),
+    upload.single("image"), // Multer middleware for file upload
+    createGame,
+);
 
 module.exports = router;
