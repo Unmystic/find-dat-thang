@@ -1,4 +1,4 @@
-/*.game-container {*/
+/*.game-layout {*/
 /*    display: flex;*/
 /*    flex-direction: column;*/
 /*    width: 100vw;*/
@@ -6,61 +6,28 @@
 /*    background-color: #34495e;*/
 /*    overflow: hidden;*/
 /*}*/
-/**/
-/*.game-header {*/
-/*    padding: 1rem;*/
-/*    text-align: center;*/
-/*    background-color: #2c3e50;*/
-/*    color: #ecf0f1;*/
-/*    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);*/
-/*    z-index: 10;*/
-/*}*/
-/**/
-/*.game-header h2 {*/
-/*    margin: 0;*/
-/*    font-size: 1.5rem;*/
-/*}*/
-/**/
+
+/* This is the main container for the pannable/zoomable image */
 /*.image-viewport {*/
 /*    flex-grow: 1;*/
 /*    width: 100%;*/
-/*    position: relative;*/
-/*    cursor: grab;*/
+/*    padding: 20px;*/
+/* Provides space around the image container */
+/*box-sizing: border-box;*/
+/*display: flex;*/
+/*align-items: center;*/
+/*justify-content: center;*/
+/*overflow: hidden;*/
+/*min-height: 0;*/
+/* Crucial for react-zoom-pan-pinch */
 /*}*/
 /**/
-/*.image-viewport:active {*/
-/*    cursor: grabbing;*/
-/*}*/
-/**/
-/*.image-wrapper {*/
-/*    position: relative;*/
-/*    width: 100%;*/
-/*    height: 100%;*/
-/*    display: flex;*/
-/*    align-items: center;*/
-/*    justify-content: center;*/
-/*}*/
-/**/
-/*.image-wrapper img {*/
-/*    max-width: 100%;*/
-/*    max-height: 100%;*/
-/*    object-fit: contain;*/
-/*    /* This is key for standardized display */
-*/
-/*    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);*/
-/*}*/
-/**/
-/*.controls-info {*/
-/*    background-color: #2c3e50;*/
-/*    color: #bdc3c7;*/
-/*    text-align: center;*/
-/*    padding: 0.5rem;*/
-/*    font-size: 0.9rem;*/
-/*}*/
 
 .game-layout {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    /* Use Grid instead of Flexbox */
+    grid-template-rows: auto 1fr;
+    /* Header takes its own space, image view takes the rest */
     width: 100vw;
     height: 100vh;
     background-color: #34495e;
@@ -69,17 +36,16 @@
 
 /* This is the main container for the pannable/zoomable image */
 .image-viewport {
-    flex-grow: 1;
-    width: 100%;
+    /* This container is now a grid item and will correctly fill the '1fr' space */
     padding: 20px;
-    /* Provides space around the image container */
     box-sizing: border-box;
     display: flex;
+    /* We still use flex here just to center the content inside */
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    min-height: 0;
-    /* Crucial for react-zoom-pan-pinch */
+    /* Crucial for containing the zoomable content */
+    /* min-height: 0; is no longer needed with CSS Grid! */
 }
 
 .transform-wrapper {

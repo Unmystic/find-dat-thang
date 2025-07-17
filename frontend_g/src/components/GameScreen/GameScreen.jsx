@@ -9,7 +9,9 @@ const GameScreen = ({ game, onGameFinish }) => {
     const [timer, setTimer] = useState(0);
     const [attemptsLeft, setAttemptsLeft] = useState(3);
     const [gameStatus, setGameStatus] = useState("playing"); // 'playing', 'found', 'game-over'
-    const [gameMessage, setGameMessage] = useState("Find the hidden object!");
+    const [gameMessage, setGameMessage] = useState(
+        `Find the: ${game.target.name}!`,
+    );
 
     // Guessing State
     const [boxPosition, setBoxPosition] = useState(null);
@@ -48,7 +50,7 @@ const GameScreen = ({ game, onGameFinish }) => {
             setGameStatus("found");
             setIsGuessCorrect(true);
             setGameMessage(`You found it!`);
-            setTimeout(() => onGameFinish(timer), 2000); // End game after 2s
+            setTimeout(() => onGameFinish({ status: "won", time: timer }), 2000); // End game after 2s
         } else {
             setTimer((t) => t + 10);
             const newAttempts = attemptsLeft - 1;
@@ -58,7 +60,8 @@ const GameScreen = ({ game, onGameFinish }) => {
             if (newAttempts <= 0) {
                 setGameStatus("game-over");
                 setGameMessage("Game Over!");
-                setTimeout(() => onGameFinish(timer + 10), 2000); // End game after 2s
+                // Pass a 'lost' status
+                setTimeout(() => onGameFinish({ status: "lost", time: 0 }), 2000);
             } else {
                 setGameMessage("Not quite... Try again!");
                 setTimeout(() => setBoxPosition(null), 1500);

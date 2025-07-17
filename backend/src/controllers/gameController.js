@@ -12,12 +12,25 @@ const getAllGames = async (req, res) => {
         id: true,
         title: true,
         imageUrl: true,
+        // Add this to include the target's name
+        target: {
+          select: {
+            name: true,
+          },
+        },
       },
     });
     res.json(games);
   } catch (error) {
     res.status(500).json({ error: "Failed to fetch games" });
   }
+};
+
+// ... other functions
+
+module.exports = {
+  getAllGames,
+  // ... other exports
 };
 
 // GET /api/games/:id
