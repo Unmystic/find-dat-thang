@@ -4,17 +4,17 @@ const express = require("express");
 const router = express.Router();
 const passport = require("passport");
 const {
-    upload,
-    createGame,
-    ...gameController
+  upload,
+  createGame,
+  ...gameController
 } = require("../controllers/gameController");
-
+console.log(upload);
 // Middleware to check for specific roles
 const checkRole = (roles) => (req, res, next) => {
-    if (roles.includes(req.user.role)) {
-        return next();
-    }
-    return res.status(403).json({ error: "Forbidden: Insufficient role" });
+  if (roles.includes(req.user.role)) {
+    return next();
+  }
+  return res.status(403).json({ error: "Forbidden: Insufficient role" });
 };
 
 // Public Routes
@@ -25,18 +25,18 @@ router.post("/:id/guess", gameController.submitGuess);
 
 // Protected Routes
 router.post(
-    "/:id/scores",
-    passport.authenticate("jwt", { session: false }),
-    gameController.addScore,
+  "/:id/scores",
+  passport.authenticate("jwt", { session: false }),
+  gameController.addScore,
 );
 
 // Admin/Editor Route for creating games
 router.post(
-    "/",
-    passport.authenticate("jwt", { session: false }),
-    checkRole(["ADMIN", "EDITOR"]),
-    upload.single("image"), // Multer middleware for file upload
-    createGame,
+  "/",
+  passport.authenticate("jwt", { session: false }),
+  checkRole(["ADMIN", "EDITOR"]),
+  upload.single("image"), // Multer middleware for file upload
+  createGame,
 );
 
 module.exports = router;

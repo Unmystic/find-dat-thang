@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
-import "./AuthForms.css"; // Shared CSS for login/register
+import "./AuthForms.css";
 
 const LoginPage = ({ onNavigate }) => {
     const [email, setEmail] = useState("");
@@ -17,12 +17,14 @@ const LoginPage = ({ onNavigate }) => {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email, password }),
             });
-            if (!response.ok) throw new Error("Login failed");
             const data = await response.json();
+            if (!response.ok) {
+                throw new Error(data.message || "Login failed");
+            }
             login(data.token);
-            onNavigate("welcome"); // Navigate to welcome screen on success
+            onNavigate("welcome");
         } catch (err) {
-            setError(err.message || "Invalid credentials");
+            setError(err.message);
         }
     };
 

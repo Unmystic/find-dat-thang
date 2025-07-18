@@ -3,15 +3,14 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-const gameRoutes = require("./routes/gameRoutes");
-
-const app = express();
-const PORT = process.env.PORT || 5000;
-
+const path = require("path");
 // ... imports
 const passport = require("./config/passport"); // Use configured passport
 const authRoutes = require("./routes/authRoutes");
 const gameRoutes = require("./routes/gameRoutes");
+
+const app = express();
+const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors());
@@ -20,13 +19,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(passport.initialize()); // Initialize passport
 
 // Serve static files from the 'public' directory
-app.use(express.static("public"));
+app.use(express.static(path.join(__dirname, "..", "public")));
 
 // Routes
 app.use("/api/auth", authRoutes); // Add auth routes
-app.use("/api/games", gameRoutes);
-
-// Routes
 app.use("/api/games", gameRoutes);
 
 // Basic error handling

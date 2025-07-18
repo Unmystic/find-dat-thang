@@ -13,7 +13,7 @@ const storage = multer.diskStorage({
         cb(null, Date.now() + path.extname(file.originalname)); // Unique filename
     },
 });
-exports.upload = multer({ storage: storage });
+const upload = multer({ storage: storage });
 
 // GET /api/games
 // Fetches all available games
@@ -36,13 +36,6 @@ const getAllGames = async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: "Failed to fetch games" });
     }
-};
-
-// ... other functions
-
-module.exports = {
-    getAllGames,
-    // ... other exports
 };
 
 // GET /api/games/:id
@@ -145,7 +138,7 @@ const addScore = async (req, res) => {
 };
 
 // POST /api/games - Creates a new game
-exports.createGame = async (req, res) => {
+const createGame = async (req, res) => {
     const { title, targetName, x, y, radius } = req.body;
     const imageUrl = `/uploads/${req.file.filename}`; // URL accessible by the frontend
 
@@ -172,6 +165,8 @@ exports.createGame = async (req, res) => {
 };
 
 module.exports = {
+    upload,
+    createGame,
     getAllGames,
     getGameById,
     submitGuess,

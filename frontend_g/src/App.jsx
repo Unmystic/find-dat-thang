@@ -1,6 +1,7 @@
 import { useState, useContext } from "react";
 import { AuthContext } from "./context/AuthContext";
-import WelcomeScreen from "./components/WelcomeScreen/WelcomeScreen"; // Assuming you move WelcomeScreen to pages
+import Header from "./components/Header/Header";
+import WelcomeScreen from "./pages/WelcomeScreen";
 import GameScreen from "./components/GameScreen/GameScreen";
 import EndGameScreen from "./components/EndGameScreen/EndGameScreen";
 import LoginPage from "./pages/LoginPage";
@@ -27,11 +28,12 @@ function App() {
     };
 
     const renderPage = () => {
-        // Protected Routes Logic
+        // Protected Route Logic
         if (
             page === "create-game" &&
             (!user || !["ADMIN", "EDITOR"].includes(user.role))
         ) {
+            // If not an authorized user, just show the welcome screen
             return (
                 <WelcomeScreen
                     onNavigate={handleNavigate}
@@ -68,7 +70,12 @@ function App() {
         }
     };
 
-    return <div className="App">{renderPage()}</div>;
+    return (
+        <div className="App">
+            <Header onNavigate={handleNavigate} />
+            <main>{renderPage()}</main>
+        </div>
+    );
 }
 
 export default App;

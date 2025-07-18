@@ -1,51 +1,19 @@
-/*.game-layout {*/
-/*    display: flex;*/
-/*    flex-direction: column;*/
-/*    width: 100vw;*/
-/*    height: 100vh;*/
-/*    background-color: #34495e;*/
-/*    overflow: hidden;*/
-/*}*/
-
-/* This is the main container for the pannable/zoomable image */
-/*.image-viewport {*/
-/*    flex-grow: 1;*/
-/*    width: 100%;*/
-/*    padding: 20px;*/
-/* Provides space around the image container */
-/*box-sizing: border-box;*/
-/*display: flex;*/
-/*align-items: center;*/
-/*justify-content: center;*/
-/*overflow: hidden;*/
-/*min-height: 0;*/
-/* Crucial for react-zoom-pan-pinch */
-/*}*/
-/**/
-
 .game-layout {
     display: grid;
-    /* Use Grid instead of Flexbox */
     grid-template-rows: auto 1fr;
-    /* Header takes its own space, image view takes the rest */
     width: 100vw;
     height: 100vh;
     background-color: #34495e;
     overflow: hidden;
 }
 
-/* This is the main container for the pannable/zoomable image */
 .image-viewport {
-    /* This container is now a grid item and will correctly fill the '1fr' space */
     padding: 20px;
     box-sizing: border-box;
     display: flex;
-    /* We still use flex here just to center the content inside */
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    /* Crucial for containing the zoomable content */
-    /* min-height: 0; is no longer needed with CSS Grid! */
 }
 
 .transform-wrapper {
